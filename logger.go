@@ -9,6 +9,7 @@ import (
 var (
 	logStdOut *zap.Logger
 	logStdErr *zap.Logger
+	isVerbose bool
 )
 
 func init() {
@@ -31,6 +32,8 @@ func InitLogger(verbose bool) {
 
 	conf.OutputPaths = []string{"stderr"}
 	logStdErr, _ = conf.Build()
+
+	isVerbose = verbose
 }
 
 //Error logs errors into std err
@@ -40,7 +43,9 @@ func Error(msg string, fields ...zapcore.Field) {
 
 //Debug logs info into std out
 func Debug(msg string, fields ...zapcore.Field) {
-	logStdOut.Debug(msg, fields...)
+	if isVerbose {
+		logStdOut.Debug(msg, fields...)
+	}
 }
 
 //Info logs info into std out
